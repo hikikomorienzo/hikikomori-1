@@ -15,6 +15,23 @@ body{
     overflow:hidden;
 }
 
+/* FONDO DINÁMICO */
+#bgImage{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    opacity:0;
+    filter:blur(6px) brightness(0.35);
+    transition:opacity 1.5s ease;
+    z-index:-2;
+}
+
+/* CANVAS */
 canvas{
     position:fixed;
     top:0;
@@ -40,6 +57,7 @@ canvas{
     pointer-events:none;
 }
 
+/* INTRO */
 .intro{
     position:fixed;
     width:100%;
@@ -169,7 +187,8 @@ canvas{
 .section-content{
     max-width:700px;
     font-size:1.5em;
-    color:#bbb;
+    color:#fff;
+    text-shadow:0 0 20px rgba(0,0,0,0.8);
 }
 
 .back{
@@ -190,6 +209,8 @@ canvas{
 </style>
 </head>
 <body>
+
+<div id="bgImage"></div>
 
 <canvas id="particles"></canvas>
 <canvas id="grain"></canvas>
@@ -248,7 +269,13 @@ const texts={
 };
 
 function openSection(name){
+
+    const bg=document.getElementById("bgImage");
+    bg.style.backgroundImage=`url(${name}.jpg)`;
+    bg.style.opacity="1";
+
     document.getElementById("overlay").style.opacity="0.6";
+
     const home=document.getElementById("home");
     home.style.opacity="0";
     home.style.transform="translateY(-40px)";
@@ -264,6 +291,8 @@ function openSection(name){
 
 function goBack(){
     document.getElementById("overlay").style.opacity="0";
+    document.getElementById("bgImage").style.opacity="0";
+
     const section=document.getElementById("sectionView");
     section.classList.remove("active");
     
