@@ -14,7 +14,6 @@ body {
     overflow: hidden;
 }
 
-/* Pantalla inicial */
 .intro {
     position: absolute;
     width: 100%;
@@ -50,18 +49,16 @@ body {
     letter-spacing: 2px;
 }
 
-/* Contenido principal oculto al inicio */
-.main {
-    display: none;
-    height: 100vh;
-}
-
-/* Lluvia */
 canvas {
     position: absolute;
     top: 0;
     left: 0;
     z-index: 0;
+}
+
+.main {
+    display: none;
+    height: 100vh;
 }
 
 .container {
@@ -71,7 +68,6 @@ canvas {
     z-index: 1;
 }
 
-/* Zona izquierda */
 .main-text {
     flex: 2;
     display: flex;
@@ -87,7 +83,6 @@ canvas {
     margin: 0;
 }
 
-/* Destello */
 .main-text p {
     color: #aaa;
     font-style: italic;
@@ -104,7 +99,6 @@ canvas {
     }
 }
 
-/* Menú */
 .menu-panel {
     flex: 1;
     display: flex;
@@ -118,6 +112,7 @@ canvas {
     text-decoration: none;
     margin: 20px 0;
     font-size: 1.2em;
+    cursor: pointer;
     transition: 0.3s;
 }
 
@@ -125,17 +120,30 @@ canvas {
     color: white;
     letter-spacing: 4px;
 }
+
+/* Contenido dinámico */
+.section {
+    position: absolute;
+    bottom: 15%;
+    left: 10%;
+    max-width: 600px;
+    color: #bbb;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.section.active {
+    opacity: 1;
+}
 </style>
 </head>
 <body>
 
-<!-- Pantalla inicial -->
 <div class="intro">
     <h1>HIKIKOMORI</h1>
     <button onclick="startSite()">Entrar con sonido</button>
 </div>
 
-<!-- Contenido real -->
 <div class="main" id="mainContent">
     <canvas id="rain"></canvas>
 
@@ -147,13 +155,30 @@ canvas {
 
         <div class="menu-panel">
             <div class="menu">
-                <a href="fragmentos.html">Fragmentos</a>
-                <a href="recuerdos.html">Recuerdos</a>
-                <a href="pensamientos.html">Pensamientos</a>
-                <a href="suenos.html">Sueños</a>
+                <a onclick="showSection('fragmentos')">Fragmentos</a>
+                <a onclick="showSection('recuerdos')">Recuerdos</a>
+                <a onclick="showSection('pensamientos')">Pensamientos</a>
+                <a onclick="showSection('suenos')">Sueños</a>
             </div>
         </div>
     </div>
+
+    <div id="fragmentos" class="section">
+        "A veces el silencio grita más fuerte que cualquier palabra."
+    </div>
+
+    <div id="recuerdos" class="section">
+        "Los recuerdos no duelen... hasta que se vuelven lejanos."
+    </div>
+
+    <div id="pensamientos" class="section">
+        "Mi mente es un cuarto sin ventanas."
+    </div>
+
+    <div id="suenos" class="section">
+        "En mis sueños el mundo no duele."
+    </div>
+
 </div>
 
 <audio id="bgMusic" loop>
@@ -165,6 +190,13 @@ function startSite() {
     document.querySelector(".intro").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
     document.getElementById("bgMusic").play();
+}
+
+function showSection(id) {
+    document.querySelectorAll(".section").forEach(sec => {
+        sec.classList.remove("active");
+    });
+    document.getElementById(id).classList.add("active");
 }
 
 /* Lluvia */
@@ -206,11 +238,6 @@ function drawRain() {
 }
 
 setInterval(drawRain, 30);
-
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
 </script>
 
 </body>
