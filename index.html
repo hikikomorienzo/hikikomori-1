@@ -15,7 +15,22 @@ body{
     overflow:hidden;
 }
 
-/* CANVAS */
+/* FONDO DINÁMICO */
+#bgImage{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    opacity:0;
+    filter:blur(6px) brightness(0.35);
+    transition:opacity 1.5s ease;
+    z-index:-2;
+}
+
 canvas{
     position:fixed;
     top:0;
@@ -41,7 +56,6 @@ canvas{
     pointer-events:none;
 }
 
-/* INTRO */
 .intro{
     position:fixed;
     width:100%;
@@ -111,12 +125,14 @@ canvas{
     font-style:italic;
     margin-top:20px;
     font-size:1.2em;
-    animation:glow 4s infinite alternate;
 }
 
-@keyframes glow{
-    from{ text-shadow:0 0 10px rgba(255,255,255,0.1);}
-    to{ text-shadow:0 0 30px rgba(255,255,255,0.4);}
+.dedicatoria{
+    margin-top:10px;
+    font-size:0.8em;
+    color:#666;
+    letter-spacing:2px;
+    opacity:0.7;
 }
 
 .right{
@@ -141,7 +157,6 @@ canvas{
     text-shadow:0 0 20px rgba(255,255,255,0.5);
 }
 
-/* SECTION VIEW */
 .section-view{
     display:none;
     position:absolute;
@@ -169,37 +184,12 @@ canvas{
     opacity:0.7;
 }
 
-/* LAYOUT TEXTO + IMAGEN */
-.section-layout{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:70px;
-    max-width:1100px;
-    width:90%;
-}
-
 .section-content{
-    max-width:500px;
-    font-size:1.4em;
+    max-width:700px;
+    font-size:1.5em;
+    color:#fff;
     line-height:1.6;
     text-shadow:0 0 20px rgba(0,0,0,0.8);
-}
-
-.section-image-container{
-    max-width:420px;
-}
-
-.section-image-container img{
-    width:100%;
-    border-radius:10px;
-    filter:brightness(0.75);
-    box-shadow:0 0 60px rgba(0,0,0,0.9);
-    transition:transform 1s ease;
-}
-
-.section-view.active img{
-    transform:scale(1.03);
 }
 
 .back{
@@ -217,16 +207,11 @@ canvas{
     color:white;
     box-shadow:0 0 30px rgba(255,255,255,0.3);
 }
-
-/* RESPONSIVE */
-@media(max-width:900px){
-    .section-layout{
-        flex-direction:column;
-    }
-}
 </style>
 </head>
 <body>
+
+<div id="bgImage"></div>
 
 <canvas id="particles"></canvas>
 <canvas id="grain"></canvas>
@@ -243,6 +228,7 @@ canvas{
         <div class="left">
             <h1 id="mainTitle">HIKIKOMORI</h1>
             <div class="subtitle">El eco de mis pensamientos</div>
+            <div class="dedicatoria">Portafolios para mi querida Mónica, Moonenzo te quiere</div>
         </div>
 
         <div class="right">
@@ -257,14 +243,7 @@ canvas{
 
     <div class="section-view" id="sectionView">
         <div class="section-title">HIKIKOMORI</div>
-
-        <div class="section-layout" id="sectionLayout">
-            <div class="section-content" id="sectionText"></div>
-            <div class="section-image-container">
-                <img id="sectionImage" src="">
-            </div>
-        </div>
-
+        <div class="section-content" id="sectionText"></div>
         <div class="back" onclick="goBack()">Volver atrás</div>
     </div>
 
@@ -285,13 +264,51 @@ function enter(){
 }
 
 const texts={
-    nuncadije:"A veces quise decirte que tenía miedo de perderte. Miedo de que un día simplemente dejaras de mirarme igual. Pero me quedé callado… y ahora el silencio pesa más que cualquier palabra.",
-    cuandotepienso:"No es nostalgia. Es ese instante pequeño donde todo se detiene. Cuando una canción suena, cuando una luz entra por la ventana, cuando te recuerdo sin querer.",
-    loquekeda:"No sé exactamente qué fuimos. Pero aún queda algo. En mi forma de pensar, en la manera en que todavía te busco en cosas que no eres tú.",
-    sivuelves:"Si algún día vuelves, no te pediría explicaciones. No hablaría del pasado. Solo me gustaría que te quedaras… un poco más esta vez."
+    nuncadije:`Nunca te dije que detrás de mi insistencia había miedo.
+No miedo a estar solo,
+sino miedo a perder algo que sentía de verdad.
+
+Nunca quise presionarte.
+Solo quería que supieras que lo que sentía no era un juego.
+Que no estaba aquí por costumbre,
+sino porque contigo algo era distinto.`,
+
+    cuandotepienso:`Cuando te pienso no recuerdo las discusiones.
+Recuerdo tu voz tranquila.
+Recuerdo cómo me sentía cuando estabas bien.
+
+A veces me pregunto si todo esto te da ansiedad
+porque sientes demasiado,
+igual que yo.
+Y si eso asusta,
+no te culpo.`,
+
+    loquekeda:`Lo que queda no es rabia.
+Es incertidumbre.
+Es querer abrazarte y no saber si puedo.
+
+Sé que tienes miedo.
+Sé que dudas.
+Pero incluso ahora,
+cuando todo es confuso,
+lo que siento por ti no ha cambiado.`,
+
+    sivuelves:`Si algún día vuelves,
+no quiero que sea por presión.
+Ni por miedo a perderme.
+
+Quiero que sea porque te sientes segura.
+Porque eliges quedarte.
+Porque confías.
+
+Y si necesitas tiempo para eso,
+yo no voy a convertir tu miedo en un castigo.`
 };
 
 function openSection(name){
+    const bg=document.getElementById("bgImage");
+    bg.style.backgroundImage=`url(${name}.jpg)`;
+    bg.style.opacity="1";
 
     document.getElementById("overlay").style.opacity="0.6";
 
@@ -301,21 +318,8 @@ function openSection(name){
     
     setTimeout(()=>{
         home.style.display="none";
-
         const section=document.getElementById("sectionView");
         document.getElementById("sectionText").innerText=texts[name];
-
-        const img=document.getElementById("sectionImage");
-        img.src=name + ".jpg";
-
-        const layout=document.getElementById("sectionLayout");
-
-        if(name==="cuandotepienso" || name==="sivuelves"){
-            layout.style.flexDirection="row-reverse";
-        } else {
-            layout.style.flexDirection="row";
-        }
-
         section.style.display="flex";
         setTimeout(()=>section.classList.add("active"),50);
     },800);
@@ -323,6 +327,7 @@ function openSection(name){
 
 function goBack(){
     document.getElementById("overlay").style.opacity="0";
+    document.getElementById("bgImage").style.opacity="0";
 
     const section=document.getElementById("sectionView");
     section.classList.remove("active");
@@ -337,64 +342,6 @@ function goBack(){
         },50);
     },800);
 }
-
-/* PARTICULAS */
-const pCanvas=document.getElementById("particles");
-const pCtx=pCanvas.getContext("2d");
-pCanvas.width=innerWidth;
-pCanvas.height=innerHeight;
-
-let particles=[];
-for(let i=0;i<70;i++){
-    particles.push({
-        x:Math.random()*pCanvas.width,
-        y:Math.random()*pCanvas.height,
-        r:Math.random()*2,
-        s:Math.random()*0.4+0.1
-    });
-}
-
-function animateParticles(){
-    pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-    pCtx.fillStyle="rgba(255,255,255,0.2)";
-    particles.forEach(p=>{
-        pCtx.beginPath();
-        pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        pCtx.fill();
-        p.y-=p.s;
-        if(p.y<0){
-            p.y=pCanvas.height;
-            p.x=Math.random()*pCanvas.width;
-        }
-    });
-    requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
-/* GRANO */
-const gCanvas=document.getElementById("grain");
-const gCtx=gCanvas.getContext("2d");
-gCanvas.width=innerWidth;
-gCanvas.height=innerHeight;
-
-function generateGrain(){
-    const imageData=gCtx.createImageData(gCanvas.width,gCanvas.height);
-    for(let i=0;i<imageData.data.length;i+=4){
-        const v=Math.random()*255;
-        imageData.data[i]=v;
-        imageData.data[i+1]=v;
-        imageData.data[i+2]=v;
-        imageData.data[i+3]=30;
-    }
-    gCtx.putImageData(imageData,0,0);
-}
-
-setInterval(generateGrain,80);
-
-window.addEventListener("resize",()=>{
-    pCanvas.width=gCanvas.width=innerWidth;
-    pCanvas.height=gCanvas.height=innerHeight;
-});
 </script>
 
 </body>
