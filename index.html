@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Hikikomori</title>
+
 <style>
 body {
     margin: 0;
     padding: 0;
-    background: black;
+    background: #000;
     color: white;
     font-family: 'Segoe UI', sans-serif;
     overflow: hidden;
 }
 
-/* Lluvia en canvas */
 canvas {
     position: absolute;
     top: 0;
@@ -21,7 +21,6 @@ canvas {
     z-index: 0;
 }
 
-/* Contenedor principal dividido */
 .container {
     display: flex;
     height: 100vh;
@@ -30,34 +29,39 @@ canvas {
     z-index: 1;
 }
 
-/* Rectángulo rojo grande */
+/* Zona izquierda grande (titulo) */
 .main-text {
     flex: 2;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    background: rgba(255, 0, 0, 0.1);
-    color: white;
-    font-size: 3em;
-    letter-spacing: 5px;
-    text-align: center;
-    padding: 40px;
+    padding-left: 10%;
 }
 
-/* Rectángulo azul grande (menú) */
+.main-text h1 {
+    font-size: 3.5em;
+    letter-spacing: 8px;
+    font-weight: 200;
+    margin: 0;
+}
+
+.main-text p {
+    color: #888;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Zona derecha (menu) */
 .menu-panel {
     flex: 1;
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    background: rgba(0, 0, 255, 0.05);
-    padding: 40px;
+    align-items: center;
 }
 
-/* Menú de botones */
 .menu a {
     display: block;
-    color: #aaa;
+    color: #666;
     text-decoration: none;
     margin: 20px 0;
     font-size: 1.2em;
@@ -66,25 +70,7 @@ canvas {
 
 .menu a:hover {
     color: white;
-    letter-spacing: 3px;
-}
-
-/* Rectángulo azul pequeño (zona vacía / efectos) */
-.side-panel {
-    flex: 1;
-    background: rgba(0, 0, 255, 0.05);
-    margin-left: 20px;
-}
-
-/* Ajustes responsivos */
-@media(max-width: 900px) {
-    .container {
-        flex-direction: column;
-    }
-    .side-panel {
-        margin-left: 0;
-        height: 100px;
-    }
+    letter-spacing: 4px;
 }
 </style>
 </head>
@@ -94,9 +80,10 @@ canvas {
 
 <div class="container">
     <div class="main-text">
-        HIKIKOMORI
-        <div style="font-size: 0.3em; margin-top:10px; font-style:italic;">El eco de mis pensamientos</div>
+        <h1>HIKIKOMORI</h1>
+        <p>El eco de mis pensamientos</p>
     </div>
+
     <div class="menu-panel">
         <div class="menu">
             <a href="fragmentos.html">Fragmentos</a>
@@ -105,15 +92,12 @@ canvas {
             <a href="suenos.html">Sueños</a>
         </div>
     </div>
-    <div class="side-panel"></div>
 </div>
 
-<!-- Sonido de lluvia -->
 <audio autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=rain-ambient-110624.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Lluvia animada -->
 <script>
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
@@ -123,7 +107,7 @@ canvas.height = window.innerHeight;
 
 let drops = [];
 
-for (let i = 0; i < 250; i++) {
+for (let i = 0; i < 300; i++) {
     drops.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -134,7 +118,7 @@ for (let i = 0; i < 250; i++) {
 
 function drawRain() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.strokeStyle = "rgba(255,255,255,0.06)";
     ctx.lineWidth = 1;
     ctx.beginPath();
 
