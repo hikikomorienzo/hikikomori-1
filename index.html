@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -14,6 +14,49 @@ body {
     overflow: hidden;
 }
 
+/* Pantalla inicial */
+.intro {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.intro h1 {
+    font-size: 3em;
+    letter-spacing: 8px;
+    font-weight: 200;
+}
+
+.intro button {
+    margin-top: 40px;
+    padding: 12px 30px;
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.intro button:hover {
+    border-color: white;
+    color: white;
+    letter-spacing: 2px;
+}
+
+/* Contenido principal oculto al inicio */
+.main {
+    display: none;
+    height: 100vh;
+}
+
+/* Lluvia */
 canvas {
     position: absolute;
     top: 0;
@@ -23,8 +66,7 @@ canvas {
 
 .container {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
     position: relative;
     z-index: 1;
 }
@@ -45,7 +87,7 @@ canvas {
     margin: 0;
 }
 
-/* Destello suave */
+/* Destello */
 .main-text p {
     color: #aaa;
     font-style: italic;
@@ -54,9 +96,7 @@ canvas {
 }
 
 @keyframes glow {
-    from {
-        text-shadow: 0 0 5px rgba(255,255,255,0.2);
-    }
+    from { text-shadow: 0 0 5px rgba(255,255,255,0.2); }
     to {
         text-shadow:
             0 0 10px rgba(255,255,255,0.4),
@@ -64,7 +104,7 @@ canvas {
     }
 }
 
-/* Zona derecha */
+/* Menú */
 .menu-panel {
     flex: 1;
     display: flex;
@@ -89,30 +129,45 @@ canvas {
 </head>
 <body>
 
-<canvas id="rain"></canvas>
+<!-- Pantalla inicial -->
+<div class="intro">
+    <h1>HIKIKOMORI</h1>
+    <button onclick="startSite()">Entrar con sonido</button>
+</div>
 
-<div class="container">
-    <div class="main-text">
-        <h1>HIKIKOMORI</h1>
-        <p>El eco de mis pensamientos</p>
-    </div>
+<!-- Contenido real -->
+<div class="main" id="mainContent">
+    <canvas id="rain"></canvas>
 
-    <div class="menu-panel">
-        <div class="menu">
-            <a href="fragmentos.html">Fragmentos</a>
-            <a href="recuerdos.html">Recuerdos</a>
-            <a href="pensamientos.html">Pensamientos</a>
-            <a href="suenos.html">Sueños</a>
+    <div class="container">
+        <div class="main-text">
+            <h1>HIKIKOMORI</h1>
+            <p>El eco de mis pensamientos</p>
+        </div>
+
+        <div class="menu-panel">
+            <div class="menu">
+                <a href="fragmentos.html">Fragmentos</a>
+                <a href="recuerdos.html">Recuerdos</a>
+                <a href="pensamientos.html">Pensamientos</a>
+                <a href="suenos.html">Sueños</a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Tu canción -->
-<audio autoplay loop>
+<audio id="bgMusic" loop>
   <source src="elephant2.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+function startSite() {
+    document.querySelector(".intro").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
+    document.getElementById("bgMusic").play();
+}
+
+/* Lluvia */
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
 
