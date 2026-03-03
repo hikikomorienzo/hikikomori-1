@@ -15,22 +15,6 @@ body{
     overflow:hidden;
 }
 
-/* FONDO DINÁMICO */
-#bgImage{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-    opacity:0;
-    filter:blur(6px) brightness(0.35);
-    transition:opacity 1.5s ease;
-    z-index:-2;
-}
-
 /* CANVAS */
 canvas{
     position:fixed;
@@ -157,6 +141,7 @@ canvas{
     text-shadow:0 0 20px rgba(255,255,255,0.5);
 }
 
+/* SECTION VIEW */
 .section-view{
     display:none;
     position:absolute;
@@ -184,11 +169,37 @@ canvas{
     opacity:0.7;
 }
 
+/* LAYOUT TEXTO + IMAGEN */
+.section-layout{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:70px;
+    max-width:1100px;
+    width:90%;
+}
+
 .section-content{
-    max-width:700px;
-    font-size:1.5em;
-    color:#fff;
+    max-width:500px;
+    font-size:1.4em;
+    line-height:1.6;
     text-shadow:0 0 20px rgba(0,0,0,0.8);
+}
+
+.section-image-container{
+    max-width:420px;
+}
+
+.section-image-container img{
+    width:100%;
+    border-radius:10px;
+    filter:brightness(0.75);
+    box-shadow:0 0 60px rgba(0,0,0,0.9);
+    transition:transform 1s ease;
+}
+
+.section-view.active img{
+    transform:scale(1.03);
 }
 
 .back{
@@ -206,11 +217,16 @@ canvas{
     color:white;
     box-shadow:0 0 30px rgba(255,255,255,0.3);
 }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .section-layout{
+        flex-direction:column;
+    }
+}
 </style>
 </head>
 <body>
-
-<div id="bgImage"></div>
 
 <canvas id="particles"></canvas>
 <canvas id="grain"></canvas>
@@ -241,7 +257,14 @@ canvas{
 
     <div class="section-view" id="sectionView">
         <div class="section-title">HIKIKOMORI</div>
-        <div class="section-content" id="sectionText"></div>
+
+        <div class="section-layout" id="sectionLayout">
+            <div class="section-content" id="sectionText"></div>
+            <div class="section-image-container">
+                <img id="sectionImage" src="">
+            </div>
+        </div>
+
         <div class="back" onclick="goBack()">Volver atrás</div>
     </div>
 
@@ -270,10 +293,6 @@ const texts={
 
 function openSection(name){
 
-    const bg=document.getElementById("bgImage");
-    bg.style.backgroundImage=`url(${name}.jpg)`;
-    bg.style.opacity="1";
-
     document.getElementById("overlay").style.opacity="0.6";
 
     const home=document.getElementById("home");
@@ -282,8 +301,21 @@ function openSection(name){
     
     setTimeout(()=>{
         home.style.display="none";
+
         const section=document.getElementById("sectionView");
         document.getElementById("sectionText").innerText=texts[name];
+
+        const img=document.getElementById("sectionImage");
+        img.src=name + ".jpg";
+
+        const layout=document.getElementById("sectionLayout");
+
+        if(name==="cuandotepienso" || name==="sivuelves"){
+            layout.style.flexDirection="row-reverse";
+        } else {
+            layout.style.flexDirection="row";
+        }
+
         section.style.display="flex";
         setTimeout(()=>section.classList.add("active"),50);
     },800);
@@ -291,7 +323,6 @@ function openSection(name){
 
 function goBack(){
     document.getElementById("overlay").style.opacity="0";
-    document.getElementById("bgImage").style.opacity="0";
 
     const section=document.getElementById("sectionView");
     section.classList.remove("active");
