@@ -7,13 +7,13 @@
 <style>
 body {
     margin: 0;
-    padding: 0;
     background: #000;
     color: white;
     font-family: 'Segoe UI', sans-serif;
     overflow: hidden;
 }
 
+/* Intro */
 .intro {
     position: absolute;
     width: 100%;
@@ -23,7 +23,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    z-index: 5;
 }
 
 .intro h1 {
@@ -38,7 +38,6 @@ body {
     background: transparent;
     border: 1px solid #555;
     color: #aaa;
-    font-size: 1em;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -46,16 +45,9 @@ body {
 .intro button:hover {
     border-color: white;
     color: white;
-    letter-spacing: 2px;
 }
 
-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-}
-
+/* Layout */
 .main {
     display: none;
     height: 100vh;
@@ -64,11 +56,9 @@ canvas {
 .container {
     display: flex;
     height: 100%;
-    position: relative;
-    z-index: 1;
 }
 
-.main-text {
+.left {
     flex: 2;
     display: flex;
     flex-direction: column;
@@ -76,30 +66,26 @@ canvas {
     padding-left: 10%;
 }
 
-.main-text h1 {
+.left h1 {
     font-size: 3.5em;
     letter-spacing: 8px;
     font-weight: 200;
     margin: 0;
 }
 
-.main-text p {
+.left p {
     color: #aaa;
     font-style: italic;
     margin-top: 15px;
-    animation: glow 3s ease-in-out infinite alternate;
+    animation: glow 3s infinite alternate;
 }
 
 @keyframes glow {
     from { text-shadow: 0 0 5px rgba(255,255,255,0.2); }
-    to {
-        text-shadow:
-            0 0 10px rgba(255,255,255,0.4),
-            0 0 20px rgba(255,255,255,0.2);
-    }
+    to { text-shadow: 0 0 15px rgba(255,255,255,0.4); }
 }
 
-.menu-panel {
+.right {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -121,7 +107,7 @@ canvas {
     letter-spacing: 4px;
 }
 
-/* Contenido dinámico */
+/* Secciones */
 .section {
     position: absolute;
     bottom: 15%;
@@ -141,24 +127,23 @@ canvas {
 
 <div class="intro">
     <h1>HIKIKOMORI</h1>
-    <button onclick="startSite()">Entrar con sonido</button>
+    <button onclick="enter()">Entrar con sonido</button>
 </div>
 
-<div class="main" id="mainContent">
-    <canvas id="rain"></canvas>
+<div class="main" id="main">
 
     <div class="container">
-        <div class="main-text">
+        <div class="left">
             <h1>HIKIKOMORI</h1>
             <p>El eco de mis pensamientos</p>
         </div>
 
-        <div class="menu-panel">
+        <div class="right">
             <div class="menu">
-                <a onclick="showSection('fragmentos')">Fragmentos</a>
-                <a onclick="showSection('recuerdos')">Recuerdos</a>
-                <a onclick="showSection('pensamientos')">Pensamientos</a>
-                <a onclick="showSection('suenos')">Sueños</a>
+                <a onclick="navigate('fragmentos')">Fragmentos</a>
+                <a onclick="navigate('recuerdos')">Recuerdos</a>
+                <a onclick="navigate('pensamientos')">Pensamientos</a>
+                <a onclick="navigate('suenos')">Sueños</a>
             </div>
         </div>
     </div>
@@ -181,63 +166,22 @@ canvas {
 
 </div>
 
-<audio id="bgMusic" loop>
+<audio id="music" loop>
   <source src="elephant2.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-function startSite() {
+function enter() {
     document.querySelector(".intro").style.display = "none";
-    document.getElementById("mainContent").style.display = "block";
-    document.getElementById("bgMusic").play();
+    document.getElementById("main").style.display = "block";
+    document.getElementById("music").play();
 }
 
-function showSection(id) {
-    document.querySelectorAll(".section").forEach(sec => {
-        sec.classList.remove("active");
-    });
-    document.getElementById(id).classList.add("active");
+function navigate(section) {
+    history.pushState(null, "", "#" + section);
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(section).classList.add("active");
 }
-
-/* Lluvia */
-const canvas = document.getElementById("rain");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let drops = [];
-
-for (let i = 0; i < 300; i++) {
-    drops.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        length: Math.random() * 20,
-        speed: Math.random() * 4 + 2
-    });
-}
-
-function drawRain() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(255,255,255,0.06)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-
-    for (let i = 0; i < drops.length; i++) {
-        let d = drops[i];
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x, d.y + d.length);
-        d.y += d.speed;
-
-        if (d.y > canvas.height) {
-            d.y = -20;
-        }
-    }
-
-    ctx.stroke();
-}
-
-setInterval(drawRain, 30);
 </script>
 
 </body>
