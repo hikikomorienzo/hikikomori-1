@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -14,7 +14,6 @@ body {
     overflow: hidden;
 }
 
-/* Lluvia */
 canvas {
     position: absolute;
     top: 0;
@@ -30,7 +29,7 @@ canvas {
     z-index: 1;
 }
 
-/* Zona izquierda (titulo) */
+/* Zona izquierda */
 .main-text {
     flex: 2;
     display: flex;
@@ -46,7 +45,7 @@ canvas {
     margin: 0;
 }
 
-/* DESTELLO EN SUBTITULO */
+/* Destello suave */
 .main-text p {
     color: #aaa;
     font-style: italic;
@@ -65,7 +64,7 @@ canvas {
     }
 }
 
-/* Zona derecha (menu) */
+/* Zona derecha */
 .menu-panel {
     flex: 1;
     display: flex;
@@ -108,11 +107,10 @@ canvas {
     </div>
 </div>
 
-<!-- TU CANCION -->
+<!-- Tu canción -->
 <audio autoplay loop>
   <source src="elephant2.mp3" type="audio/mpeg">
 </audio>
-
 
 <script>
 const canvas = document.getElementById("rain");
