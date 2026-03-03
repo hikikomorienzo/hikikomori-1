@@ -10,8 +10,10 @@ body{
     background:#000;
     color:white;
     font-family:'Segoe UI',sans-serif;
+    overflow:hidden;
 }
 
+/* INTRO */
 .intro{
     position:fixed;
     width:100%;
@@ -22,26 +24,44 @@ body{
     justify-content:center;
     align-items:center;
     z-index:10;
+    transition:opacity 0.8s ease;
+}
+
+.intro h1{
+    font-size:3em;
+    letter-spacing:8px;
+    font-weight:200;
 }
 
 .intro button{
-    margin-top:30px;
-    padding:10px 25px;
-    background:none;
-    border:1px solid #555;
+    margin-top:40px;
+    padding:12px 35px;
+    background:transparent;
+    border:1px solid #444;
     color:#aaa;
     cursor:pointer;
+    transition:all 0.4s ease;
 }
 
+.intro button:hover{
+    border-color:white;
+    color:white;
+    letter-spacing:2px;
+    box-shadow:0 0 20px rgba(255,255,255,0.2);
+}
+
+/* MAIN */
 .main{
     display:none;
     height:100vh;
     position:relative;
 }
 
+/* HOME LAYOUT */
 .home{
     display:flex;
     height:100%;
+    transition:opacity 0.6s ease, transform 0.6s ease;
 }
 
 .left{
@@ -50,6 +70,26 @@ body{
     flex-direction:column;
     justify-content:center;
     padding-left:10%;
+}
+
+.left h1{
+    font-size:3.5em;
+    letter-spacing:8px;
+    font-weight:200;
+    margin:0;
+    transition:all 0.6s ease;
+}
+
+.left p{
+    color:#888;
+    font-style:italic;
+    margin-top:15px;
+    animation:glow 3s infinite alternate;
+}
+
+@keyframes glow{
+    from{ text-shadow:0 0 5px rgba(255,255,255,0.1);}
+    to{ text-shadow:0 0 20px rgba(255,255,255,0.4);}
 }
 
 .right{
@@ -63,30 +103,72 @@ body{
     display:block;
     margin:20px 0;
     cursor:pointer;
-    color:#666;
+    color:#555;
+    font-size:1.1em;
+    transition:all 0.4s ease;
 }
 
+.menu a:hover{
+    color:white;
+    letter-spacing:4px;
+    text-shadow:0 0 15px rgba(255,255,255,0.4);
+}
+
+/* SECTION VIEW */
 .section-view{
     display:none;
+    position:absolute;
+    width:100%;
     height:100%;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     text-align:center;
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
 }
 
-.section-view h1{
+.section-view.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.section-title{
     position:absolute;
     top:40px;
+    font-size:2em;
+    letter-spacing:6px;
     font-weight:200;
+    opacity:0.8;
+}
+
+.section-content{
+    max-width:600px;
+    color:#bbb;
+    font-size:1.2em;
+    animation:fadeText 1s ease;
+}
+
+@keyframes fadeText{
+    from{opacity:0;}
+    to{opacity:1;}
 }
 
 .back{
     position:absolute;
     bottom:40px;
+    padding:10px 30px;
+    border:1px solid #444;
+    color:#aaa;
     cursor:pointer;
-    border:1px solid #555;
-    padding:8px 20px;
+    transition:all 0.4s ease;
+}
+
+.back:hover{
+    border-color:white;
+    color:white;
+    box-shadow:0 0 20px rgba(255,255,255,0.2);
 }
 </style>
 </head>
@@ -101,7 +183,7 @@ body{
 
     <div class="home" id="home">
         <div class="left">
-            <h1>HIKIKOMORI</h1>
+            <h1 id="mainTitle">HIKIKOMORI</h1>
             <p>El eco de mis pensamientos</p>
         </div>
 
@@ -116,8 +198,8 @@ body{
     </div>
 
     <div class="section-view" id="sectionView">
-        <h1>HIKIKOMORI</h1>
-        <div id="sectionText"></div>
+        <div class="section-title">HIKIKOMORI</div>
+        <div class="section-content" id="sectionText"></div>
         <div class="back" onclick="goBack()">Volver atrás</div>
     </div>
 
@@ -129,9 +211,12 @@ body{
 
 <script>
 function enter(){
-    document.querySelector(".intro").style.display="none";
-    document.getElementById("main").style.display="block";
-    document.getElementById("music").play();
+    document.querySelector(".intro").style.opacity="0";
+    setTimeout(()=>{
+        document.querySelector(".intro").style.display="none";
+        document.getElementById("main").style.display="block";
+        document.getElementById("music").play();
+    },800);
 }
 
 const texts={
@@ -142,14 +227,32 @@ const texts={
 };
 
 function openSection(name){
-    document.getElementById("home").style.display="none";
-    document.getElementById("sectionView").style.display="flex";
-    document.getElementById("sectionText").innerText=texts[name];
+    const home=document.getElementById("home");
+    home.style.opacity="0";
+    home.style.transform="translateY(-20px)";
+    
+    setTimeout(()=>{
+        home.style.display="none";
+        const section=document.getElementById("sectionView");
+        document.getElementById("sectionText").innerText=texts[name];
+        section.style.display="flex";
+        setTimeout(()=>section.classList.add("active"),50);
+    },500);
 }
 
 function goBack(){
-    document.getElementById("sectionView").style.display="none";
-    document.getElementById("home").style.display="flex";
+    const section=document.getElementById("sectionView");
+    section.classList.remove("active");
+    
+    setTimeout(()=>{
+        section.style.display="none";
+        const home=document.getElementById("home");
+        home.style.display="flex";
+        setTimeout(()=>{
+            home.style.opacity="1";
+            home.style.transform="translateY(0)";
+        },50);
+    },500);
 }
 </script>
 
