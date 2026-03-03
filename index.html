@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Hikikomori</title>
-
 <style>
 body {
     margin: 0;
@@ -14,79 +13,107 @@ body {
     overflow: hidden;
 }
 
-.light {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.95) 70%);
-}
-
-.content {
-    position: relative;
-    text-align: center;
-    top: 30%;
-    z-index: 2;
-}
-
-h1 {
-    font-size: 3em;
-    letter-spacing: 8px;
-    font-weight: 200;
-}
-
-.subtitle {
-    color: #aaa;
-    margin-bottom: 40px;
-    font-style: italic;
-}
-
-.menu a {
-    display: block;
-    color: #777;
-    text-decoration: none;
-    margin: 15px;
-    font-size: 1.1em;
-    transition: 0.4s;
-}
-
-.menu a:hover {
-    color: white;
-    letter-spacing: 4px;
-}
-
+/* Lluvia en canvas */
 canvas {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 0;
+}
+
+/* Contenedor principal dividido */
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
     z-index: 1;
+}
+
+/* Rectángulo rojo grande */
+.main-text {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 0, 0, 0.1);
+    color: white;
+    font-size: 3em;
+    letter-spacing: 5px;
+    text-align: center;
+    padding: 40px;
+}
+
+/* Rectángulo azul grande (menú) */
+.menu-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(0, 0, 255, 0.05);
+    padding: 40px;
+}
+
+/* Menú de botones */
+.menu a {
+    display: block;
+    color: #aaa;
+    text-decoration: none;
+    margin: 20px 0;
+    font-size: 1.2em;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: white;
+    letter-spacing: 3px;
+}
+
+/* Rectángulo azul pequeño (zona vacía / efectos) */
+.side-panel {
+    flex: 1;
+    background: rgba(0, 0, 255, 0.05);
+    margin-left: 20px;
+}
+
+/* Ajustes responsivos */
+@media(max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+    .side-panel {
+        margin-left: 0;
+        height: 100px;
+    }
 }
 </style>
 </head>
 <body>
 
-<div class="light"></div>
-
-<div class="content">
-    <h1>HIKIKOMORI</h1>
-    <div class="subtitle">El eco de mis pensamientos</div>
-
-    <div class="menu">
-        <a href="fragmentos.html">Fragmentos</a>
-        <a href="recuerdos.html">Recuerdos</a>
-        <a href="pensamientos.html">Pensamientos</a>
-        <a href="suenos.html">Sueños</a>
-    </div>
-</div>
-
 <canvas id="rain"></canvas>
 
+<div class="container">
+    <div class="main-text">
+        HIKIKOMORI
+        <div style="font-size: 0.3em; margin-top:10px; font-style:italic;">El eco de mis pensamientos</div>
+    </div>
+    <div class="menu-panel">
+        <div class="menu">
+            <a href="fragmentos.html">Fragmentos</a>
+            <a href="recuerdos.html">Recuerdos</a>
+            <a href="pensamientos.html">Pensamientos</a>
+            <a href="suenos.html">Sueños</a>
+        </div>
+    </div>
+    <div class="side-panel"></div>
+</div>
+
+<!-- Sonido de lluvia -->
 <audio autoplay loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Lluvia animada -->
 <script>
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
@@ -126,6 +153,11 @@ function drawRain() {
 }
 
 setInterval(drawRain, 30);
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 </script>
 
 </body>
