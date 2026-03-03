@@ -15,15 +15,31 @@ body{
     overflow:hidden;
 }
 
-/* PARTICULAS */
 canvas{
     position:fixed;
     top:0;
     left:0;
-    z-index:0;
 }
 
-/* INTRO */
+#particles{ z-index:0; }
+
+#grain{
+    z-index:2;
+    pointer-events:none;
+    opacity:0.08;
+}
+
+.overlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:black;
+    opacity:0;
+    transition:opacity 1s ease;
+    z-index:1;
+    pointer-events:none;
+}
+
 .intro{
     position:fixed;
     width:100%;
@@ -60,15 +76,13 @@ canvas{
     box-shadow:0 0 30px rgba(255,255,255,0.2);
 }
 
-/* MAIN */
 .main{
     display:none;
     height:100vh;
     position:relative;
-    z-index:1;
+    z-index:3;
 }
 
-/* HOME */
 .home{
     display:flex;
     height:100%;
@@ -88,7 +102,6 @@ canvas{
     letter-spacing:12px;
     font-weight:300;
     margin:0;
-    transition:all 0.8s ease;
 }
 
 .subtitle{
@@ -126,7 +139,6 @@ canvas{
     text-shadow:0 0 20px rgba(255,255,255,0.5);
 }
 
-/* SECTION */
 .section-view{
     display:none;
     position:absolute;
@@ -158,12 +170,6 @@ canvas{
     max-width:700px;
     font-size:1.5em;
     color:#bbb;
-    animation:fadeText 1.5s ease;
-}
-
-@keyframes fadeText{
-    from{opacity:0;}
-    to{opacity:1;}
 }
 
 .back{
@@ -186,6 +192,8 @@ canvas{
 <body>
 
 <canvas id="particles"></canvas>
+<canvas id="grain"></canvas>
+<div class="overlay" id="overlay"></div>
 
 <div class="intro">
     <h1>HIKIKOMORI</h1>
@@ -202,10 +210,10 @@ canvas{
 
         <div class="right">
             <div class="menu">
-                <a onclick="openSection('fragmentos')">Fragmentos</a>
-                <a onclick="openSection('recuerdos')">Recuerdos</a>
-                <a onclick="openSection('pensamientos')">Pensamientos</a>
-                <a onclick="openSection('suenos')">Sueños</a>
+                <a onclick="openSection('nuncadije')">Lo que nunca dije</a>
+                <a onclick="openSection('cuandotepienso')">Cuando te pienso</a>
+                <a onclick="openSection('loquekeda')">Lo que queda</a>
+                <a onclick="openSection('sivuelves')">Si algún día vuelves</a>
             </div>
         </div>
     </div>
@@ -233,13 +241,14 @@ function enter(){
 }
 
 const texts={
-    fragmentos:"A veces el silencio grita más fuerte que cualquier palabra.",
-    recuerdos:"Los recuerdos no duelen... hasta que se vuelven lejanos.",
-    pensamientos:"Mi mente es un cuarto sin ventanas.",
-    suenos:"En mis sueños el mundo no duele."
+    nuncadije:"A veces quise decirte que tenía miedo de perderte. Miedo de que un día simplemente dejaras de mirarme igual. Pero me quedé callado… y ahora el silencio pesa más que cualquier palabra.",
+    cuandotepienso:"No es nostalgia. Es ese instante pequeño donde todo se detiene. Cuando una canción suena, cuando una luz entra por la ventana, cuando te recuerdo sin querer.",
+    loquekeda:"No sé exactamente qué fuimos. Pero aún queda algo. En mi forma de pensar, en la manera en que todavía te busco en cosas que no eres tú.",
+    sivuelves:"Si algún día vuelves, no te pediría explicaciones. No hablaría del pasado. Solo me gustaría que te quedaras… un poco más esta vez."
 };
 
 function openSection(name){
+    document.getElementById("overlay").style.opacity="0.6";
     const home=document.getElementById("home");
     home.style.opacity="0";
     home.style.transform="translateY(-40px)";
@@ -254,6 +263,7 @@ function openSection(name){
 }
 
 function goBack(){
+    document.getElementById("overlay").style.opacity="0";
     const section=document.getElementById("sectionView");
     section.classList.remove("active");
     
@@ -269,43 +279,61 @@ function goBack(){
 }
 
 /* PARTICULAS */
-const canvas=document.getElementById("particles");
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+const pCanvas=document.getElementById("particles");
+const pCtx=pCanvas.getContext("2d");
+pCanvas.width=innerWidth;
+pCanvas.height=innerHeight;
 
 let particles=[];
-
-for(let i=0;i<80;i++){
+for(let i=0;i<70;i++){
     particles.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        radius:Math.random()*2,
-        speed:Math.random()*0.5+0.2
+        x:Math.random()*pCanvas.width,
+        y:Math.random()*pCanvas.height,
+        r:Math.random()*2,
+        s:Math.random()*0.4+0.1
     });
 }
 
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="rgba(255,255,255,0.2)";
+function animateParticles(){
+    pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+    pCtx.fillStyle="rgba(255,255,255,0.2)";
     particles.forEach(p=>{
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
-        ctx.fill();
-        p.y-=p.speed;
+        pCtx.beginPath();
+        pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        pCtx.fill();
+        p.y-=p.s;
         if(p.y<0){
-            p.y=canvas.height;
-            p.x=Math.random()*canvas.width;
+            p.y=pCanvas.height;
+            p.x=Math.random()*pCanvas.width;
         }
     });
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animateParticles);
 }
-animate();
+animateParticles();
+
+/* GRANO */
+const gCanvas=document.getElementById("grain");
+const gCtx=gCanvas.getContext("2d");
+gCanvas.width=innerWidth;
+gCanvas.height=innerHeight;
+
+function generateGrain(){
+    const imageData=gCtx.createImageData(gCanvas.width,gCanvas.height);
+    for(let i=0;i<imageData.data.length;i+=4){
+        const v=Math.random()*255;
+        imageData.data[i]=v;
+        imageData.data[i+1]=v;
+        imageData.data[i+2]=v;
+        imageData.data[i+3]=30;
+    }
+    gCtx.putImageData(imageData,0,0);
+}
+
+setInterval(generateGrain,80);
 
 window.addEventListener("resize",()=>{
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
+    pCanvas.width=gCanvas.width=innerWidth;
+    pCanvas.height=gCanvas.height=innerHeight;
 });
 </script>
 
